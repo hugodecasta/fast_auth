@@ -1,0 +1,25 @@
+{
+  "name": "fast_auth",
+  "version": "1.0.0",
+  "description": "Simple auth system",
+  "main": "index.js",
+  "scripts": {
+    "test": "node test.js"
+  },
+  "keywords": [
+    "auth",
+    "authorization",
+    "security",
+    "key",
+    "token"
+  ],
+  "author": "Hugo Castaneda",
+  "license": "MIT",
+  "dependencies": {
+    "fs": "0.0.1-security",
+    "storage": "git+https://github.com/hugodecasta/storage.git"
+  },
+  "devDependencies": {
+    "colors": "^1.4.0"
+  }
+}
