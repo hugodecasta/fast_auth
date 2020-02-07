@@ -16,8 +16,8 @@
   "author": "Hugo Castaneda",
   "license": "MIT",
   "dependencies": {
-    "fs": "0.0.1-security",
-    "storage": "git+https://github.com/hugodecasta/storage.git"
+    "storage": "git+https://github.com/hugodecasta/storage.git",
+    "uuidv4": "^6.0.2"
   },
   "devDependencies": {
     "colors": "^1.4.0"
