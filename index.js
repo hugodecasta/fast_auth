@@ -165,6 +165,9 @@ class FastAuth {
         let token = 'token'+uuidv4()
         this.set_token(key,token)
         let key_data = this.get_key_data(key)
+        if(key_data == null) {
+            return null
+        }
         let token_data = new DataGroup({key,end_time},key_data.data())
         this.token_storage.write_key(token,token_data.group())
         return token
