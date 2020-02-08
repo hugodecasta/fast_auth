@@ -145,7 +145,7 @@ class FastAuth {
     }
 
     set_token(key,token) {
-        let key_data = this.get_key_data(key)
+        let key_data = this.get_key_data(key,true)
         if(key_data == null) {
             return null
         }
