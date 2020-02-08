@@ -103,12 +103,12 @@ class FastAuth {
         return key
     }
 
-    get_key_data(key) {
+    get_key_data(key,force=false) {
         if(!this.key_storage.key_exists(key)) {
             return null
         }
         let key_data = new DataGroup(this.key_storage.read_key(key))
-        if(!key_data.get_meta('active')) {
+        if(!key_data.get_meta('active') && !force) {
             return null
         }
         let me = this
