@@ -123,7 +123,8 @@ class FastAuth {
         if(key_data == null) {
             return false
         }
-        if(key_data.get_meta('token') != null) {
+        let token = key_data.get_meta('token')
+        if(token != null) {
             this.revoke_token(token)
         }
         this.key_storage.remove_key(key)
