@@ -40,6 +40,8 @@ if(key_data == null) {
 
 ```
 
+Note: the `auth_data_dir_path` variable is required to indicate the auth data directory path. If this path does not exist, the storage system will create it for you (with rights according to the executing user).
+
 ## auth system
 
 The fast_auth system uses the [storage](https://github.com/hugodecasta/storage) module to store encrypted keys and tokens data.
