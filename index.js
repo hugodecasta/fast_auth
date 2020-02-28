@@ -2,7 +2,7 @@
 
 // ---------------------------------------------------- IMPORTS
 
-const uuidv4 = require('uuid/v4')
+const uuidv4 = require('uuid').v4
 const storage_class = require('storage')
 
 // ---------------------------------------------------- INNER
