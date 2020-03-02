@@ -242,7 +242,7 @@ class FastAuth {
 
 module.exports = exports.FastAuth = FastAuth
 
-if(process.argv[2] == 'prompt') {
+if(process.argv[2] == 'prompt_auth') {
 const prompt_sys = require('fast_prompt')
 
 let auth_dir = process.argv[3] || './auth_data'
