@@ -95,7 +95,7 @@ class FastAuth {
     // ----------------------------- KEYS
 
     get_list() {
-        let list = this.list_storage.read_key('list')
+        let list = this.list_storage.read_key('auth_list')
         if(list == null) {
             return {}
         }
@@ -103,7 +103,7 @@ class FastAuth {
     }
 
     set_list(list) {
-        return this.list_storage.write_key('list',list)
+        return this.list_storage.write_key('auth_list',list)
     }
 
     // ----------------------------- KEYS
