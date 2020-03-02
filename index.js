@@ -302,7 +302,7 @@ prompt_sys.looper('auth > ',prompt_sys.create_commands({
                 return 'token: '+token+' (will last '+more_secs+' seconds)'
             },
             'revoke_token':function() {
-                return fauth.revoke_token(get_token(key,Date.now()))
+                return fauth.revoke_token(fauth.get_token(key,Date.now()))
             },
             'set_api': function(api_name,life,price){
                 let api_data = {life:parseInt(life),price:parseInt(price)}
