@@ -240,6 +240,19 @@ class FastAuth {
         return token_data.set_meta('end_time',end_time)
     }
 
+    // ----------------------------- MANAGER
+
+    set_both_data(key,prop,value) {
+        let key_data = this.get_key_data(key,true)
+        if(key_data == null) {
+            return null
+        }
+        key_data.set_data(prop,value)
+        if(key_data.get_meta('token') != null) {
+            let token_data = this.get_token_data(key_data.get_meta('token'))
+        }
+    }
+
 }
 
 // ---------------------------------------------------- EXPORTS
@@ -293,10 +306,10 @@ prompt_sys.looper('auth > ',prompt_sys.create_commands({
             },
             'set_api': function(api_name,life,price){
                 let api_data = {life:parseInt(life),price:parseInt(price)}
-                fauth.get_key_data(key,true).set_data(api_name,api_data)
+                fauth.set_both_data(key,api_name,api_data)
             },
             'remove_api':function(api_name) {
-                fauth.get_key_data(key,true).set_data(api_name,undefined)
+                fauth.set_both_data(key,api_name,undefined)
             },
             'delete': function() {
                 fauth.remove_key(key)
