@@ -82,7 +82,9 @@ class DataGroup {
 
 class FastAuth {
 
-    constructor(auth_dir,prefix='',suffix='') {
+    constructor(auth_dir,save_list=true,prefix='',suffix='') {
+
+        this.save_list = save_list
 
         this.prefix = prefix
         this.suffix = suffix
@@ -95,7 +97,7 @@ class FastAuth {
     // ----------------------------- KEYS
 
     get_list() {
-        let list = this.list_storage.read_key('auth_list')
+        let list = this.list_storage.read_key('list')
         if(list == null) {
             return {}
         }
@@ -103,13 +105,15 @@ class FastAuth {
     }
 
     set_list(list) {
-        return this.list_storage.write_key('auth_list',list)
+        if(this.save_list) {
+            return this.list_storage.write_key('list',list)
+        }
     }
 
     // ----------------------------- KEYS
 
     create_key(name,data,key=undefined) {
-        key = key || this.prefix+name+uuidv4()+this.suffix
+        key = key || this.prefix+uuidv4()+this.suffix
         if(this.get_key_data(key) != null) {
             return null
         }
