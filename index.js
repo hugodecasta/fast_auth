@@ -87,19 +87,39 @@ class FastAuth {
         this.prefix = prefix
         this.suffix = suffix
 
+        this.list_storage = new storage_class(auth_dir)
         this.key_storage = new storage_class(auth_dir+'/keys')
         this.token_storage = new storage_class(auth_dir+'/tokens')
     }
 
     // ----------------------------- KEYS
 
-    create_key(data,key=undefined) {
-        key = key || this.prefix+uuidv4()+this.suffix
+    get_list() {
+        let list = this.list_storage.read_key('list')
+        if(list == null) {
+            return {}
+        }
+        return list
+    }
+
+    set_list(list) {
+        return this.list_storage.write_key('list',list)
+    }
+
+    // ----------------------------- KEYS
+
+    create_key(name,data,key=undefined) {
+        key = key || this.prefix+name+uuidv4()+this.suffix
         if(this.get_key_data(key) != null) {
             return null
         }
-        let key_data = new DataGroup({token:null,active:true},data)
+        let key_data = new DataGroup({name,token:null,active:true},data)
         this.key_storage.write_key(key,key_data.group())
+
+        let list = this.get_list()
+        list[name] = key
+        this.set_list(list)
+
         return key
     }
 
@@ -128,6 +148,9 @@ class FastAuth {
             this.revoke_token(token)
         }
         this.key_storage.remove_key(key)
+        let list = this.get_list()
+        delete list[key_data.get_meta('name')]
+        this.set_list(list)
         return true
     }
 
@@ -218,3 +241,81 @@ class FastAuth {
 // ---------------------------------------------------- EXPORTS
 
 module.exports = exports.FastAuth = FastAuth
+
+if(process.argv[2] == 'prompt') {
+const prompt_sys = require('fast_prompt')
+
+let auth_dir = process.argv[3] || './auth_data'
+let fauth = new FastAuth(auth_dir)
+
+prompt_sys.looper('auth > ',prompt_sys.create_commands({
+
+    'list':function() {
+        let list = fauth.get_list()
+        for(let name in list) {
+            console.log('   '+name)
+        }
+    },
+    'create':function(name) {
+        fauth.create_key(name,{})
+        return 'auth '+name+' created !'
+    },
+    'manage_auth':function(name) {
+        let list = fauth.get_list()
+        if(!(name in list)) {
+            throw name+' auth not found !'
+        }
+        let key = list[name]
+        prompt_sys.looper('key: '+name+' > ',prompt_sys.create_commands({
+            'key':function() {
+                return 'key: '+key
+            },
+            'api':function() {
+                let data = fauth.get_key_data(key,true).data()
+                for(let api_name in data) {
+                    console.log('   '+api_name,':',data[api_name])
+                }
+            },
+            'meta':function() {
+                console.log(fauth.get_key_data(key,true).meta())
+            },
+            'token':function(more_secs) {
+                let time = Date.now() + (1000*parseInt(more_secs))
+                let token = fauth.get_token(key,time)
+                return 'token: '+token+' (will last '+more_secs+' seconds)'
+            },
+            'revoke_token':function() {
+                return fauth.revoke_token(get_token(key,Date.now()))
+            },
+            'set_api': function(api_name,life,price){
+                let api_data = {life:parseInt(life),price:parseInt(price)}
+                fauth.get_key_data(key,true).set_data(api_name,api_data)
+            },
+            'remove_api':function(api_name) {
+                fauth.get_key_data(key,true).set_data(api_name,undefined)
+            },
+            'delete': function() {
+                fauth.remove_key(key)
+                return false
+            },
+            'set_active': function(json_value){
+                return fauth.get_key_data(key,true).set_meta('active',JSON.parse(json_value))
+            }
+        },{
+            'a':'api',
+            'm':'meta',
+            't':'token',
+            'rt':'revoke_token',
+            'sa':'set_api',
+            'ra':'remove_api',
+            'del':'delete',
+            'act':'set_active'
+        }))
+    }
+},{
+    'l':'list',
+    'ma':'manage_auth',
+    'c':'create'
+}))
+
+}
