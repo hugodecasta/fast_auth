@@ -250,6 +250,7 @@ class FastAuth {
         key_data.set_data(prop,value)
         if(key_data.get_meta('token') != null) {
             let token_data = this.get_token_data(key_data.get_meta('token'))
+            token_data.set_data(prop,value)
         }
     }
 
